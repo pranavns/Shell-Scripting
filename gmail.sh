@@ -16,7 +16,7 @@ REP=$(yad --title="Desktop Gmail Grabber"\
 	  --text="Gmail access via desktop"\
 	  --form --height=200 --width=600\
 	  --field="Service:CB"\
-		 "Check-New-Mail!Read-Mail-Number!Send-Mail!Mail-From!Mail-Subject"\
+		 "New-Mail!Mail-Number!Send-Mail!Mail-From!Mail-Subject!Mail-Summary"\
 	 --field="Email-Id" --field="Password:H")
 
 res=$? #checks exit status
@@ -40,7 +40,7 @@ fi
 respaddr=https://mail.google.com/mail/feed/atom
 network_error() {
 	zenity --error --title='Desktop Gmail Grabber: Caution!'\
-		--text="Network doesn't exist" #;exit 1
+		--text="Network doesn't exist" ;exit 1
 }
 
 #occurence of new message(mail) in the account
@@ -60,8 +60,8 @@ function newmail()
 function totmailno()
 {	
 	curl -su $femailid:$fpasswds $respaddr >:
-	loginfo=`cat :`
-	if test `echo $loginfo | wc -l` -eq 0 ; then network_error; fi		
+	loginfo=`cat :| wc -l`
+	if test $loginfo  -eq 0 ; then network_error; fi		
 	COUNT_NO=$(sed -n '/<fullcount>/p' : | sed -e 's/<fullcount>/\ / '\
 	-e 's%</fullcount>%\ % ' | awk '{ print $1 }')
 	if [ "$COUNT_NO" != "0" ]; then
@@ -110,6 +110,26 @@ function mail_subj()
 	fi; rm : /tmp/sub.$$
 }
 
+#list of summary in short
+function mail_summary()
+{
+	cd $HOME; cat web>:
+	#curl -su $femailid:$fpasswds $respaddr >:
+	len=$(cat : | wc -l)
+	if test $len -eq 0 ;then network_error; fi
+	sed -n '/<summary>/p' : |\
+ 	sed -e 's/<summary>//g' -e 's%</summary>%%g' >/tmp/summ.$$
+	SUM_COUNT=$(cat /tmp/summ.$$ | wc -l)
+	SUM_LISTS=$(cat /tmp/summ.$$)
+	if test $SUM_COUNT -eq 0; then
+		zenity --info --title="Desktop Gmail Grabber"\
+			 --text="you have no mail"
+	else
+		yad --title="Desktop Gmail Grabber" --height=500 --width=1000 --text-info \
+		--text="`echo -e "you have latest $SUM_COUNT mails having summary(short):\n\n$SUM_LISTS"`"
+	fi; rm : /tmp/summ.$$
+}
+
 #sending mail
 function sendmail()
 {
@@ -138,12 +158,11 @@ function sendmail()
 		zenity --warning --text="Content of message be non-empty"
 		exit 1; fi
 	echo "$mesg" >:
-	echo $fatch
 	if [ "$fatch" == "(null)" ]; then
-		cat : | mutt -s "$fsubj" "$fmail" >/dev/null ; null=$? #note exit status failed or not
+		cat : | mutt -s "$fsubj" "$fmail" >/dev/null ; null=$? #note exit status failed/not
 	else
 		cat : | mutt -s "$fsubj" "$fmail" -a "$fatch" >/dev/null
-		not_null=$?; fi #checking exit status if it does work(error redirection:-failed or not)
+		not_null=$?; fi #checking exit status if it does work(error occured redirection:failed/not)
 	if [ "$null" == "0" ] || [ "$not_null" == "0" ] ; then 
 		zenity --info --title="Desktop Gmail Grabber" --text="Mail send"
 	else
@@ -154,11 +173,12 @@ function sendmail()
 #service branch
 gmail() {
 	case $fservice in
-		Check-New-Mail) newmail ;;
-		Read-Mail-Number) totmailno ;;
+		New-Mail) newmail ;;
+		Mail-Number) totmailno ;;
 		Send-Mail) sendmail ;;
 		Mail-From) mail_from ;;
 		Mail-Subject) mail_subj ;;
+		Mail-Summary) mail_summary ;;
 	esac
 }
 gmail;exit 0
