@@ -140,7 +140,7 @@ function sendmail()
 			 --text="Gmail access via desktop"\
 			 --form --height=200 --width=500\
 	  		--field="Enter the subject(without any white sapce)" "NoSubject"\
-			--field="Enter the Email Username"\
+			--field="Enter the Email"\
 			--field="Attachment(Optional):FL")
 	if test $? -eq 0 ; then
 		mesg=$(yad --title="Create Message to Send"\
@@ -157,11 +157,10 @@ function sendmail()
 	if [ "$mesg" == "" ]; then
 		zenity --warning --text="Content of message be non-empty"
 		exit 1; fi
-	echo "$mesg" >:
 	if [ "$fatch" == "(null)" ]; then
-		cat : | mutt -s "$fsubj" "$fmail" >/dev/null ; null=$? #note exit status failed/not
+		echo "$mesg" | mutt -s "$fsubj" "$fmail" >/dev/null ; null=$? #note exit status failed/not
 	else
-		cat : | mutt -s "$fsubj" "$fmail" -a "$fatch" >/dev/null
+		echo "$mesg" | mutt -s "$fsubj" "$fmail" -a "$fatch" >/dev/null
 		not_null=$?; fi #checking exit status if it does work(error occured redirection:failed/not)
 	if [ "$null" == "0" ] || [ "$not_null" == "0" ] ; then 
 		zenity --info --title="Desktop Gmail Grabber" --text="Mail send"
