@@ -42,13 +42,19 @@ network_error() {
 	zenity --error --title='Desktop Gmail Grabber: Caution!'\
 		--text="Network doesn't exist" ;exit 1
 }
+wrong_entry() {
+	zenity --error --title='Desktop Gmail Grabber: Caution!'\
+		--text="Username or password is wrong!" ;exit 1
+}
 
 #occurence of new message(mail) in the account
 function newmail()
 {
 	curl -su $femailid:$fpasswds $respaddr >:
 	loginfo=`cat : | wc -l`
+	suc=$(cat : |  sed -n '/Unauthorized/p' | wc -l)
 	if test $loginfo -eq 0 ; then network_error
+	elif [ "$suc" != "0" ]; then wrong_entry 
 	elif test $loginfo -gt 8 ; then
 		zenity --info --title="Desktop Gmail Grabber" --text="New mail found!"
 	else
@@ -61,7 +67,9 @@ function totmailno()
 {	
 	curl -su $femailid:$fpasswds $respaddr >:
 	loginfo=`cat :| wc -l`
-	if test $loginfo  -eq 0 ; then network_error; fi		
+	if test $loginfo  -eq 0 ; then network_error; fi
+	suc=$(cat : |  sed -n '/Unauthorized/p' | wc -l)
+	if [ "$suc" != "0" ]; then wrong_entry; fi		
 	COUNT_NO=$(sed -n '/<fullcount>/p' : | sed -e 's/<fullcount>/\ / '\
 	-e 's%</fullcount>%\ % ' | awk '{ print $1 }')
 	if [ "$COUNT_NO" != "0" ]; then
@@ -80,6 +88,8 @@ function mail_from()
 	curl -su $femailid:$fpasswds $respaddr >:
 	len=$(cat : | wc -l)
 	if test $len -eq 0 ;then network_error; fi
+	suc=$(cat : |  sed -n '/Unauthorized/p' | wc -l)
+	if [ "$suc" != "0" ]; then wrong_entry; fi
 	NAME_LISTS=$(sed -n '/<name>/p' : |\
 	sed -e 's/<name>/\ / ' -e 's%</name>%\ % ' | awk '{ print $1 }')
 	NAME_COUNT=$(echo $NAME_LISTS | tr " " "\n" | wc -l)
@@ -97,6 +107,8 @@ function mail_subj()
 	curl -su $femailid:$fpasswds $respaddr >:
 	len=$(cat : | wc -l)
 	if test $len -eq 0 ;then network_error; fi
+	suc=$(cat : |  sed -n '/Unauthorized/p' | wc -l)
+	if [ "$suc" != "0" ]; then wrong_entry; fi
 	sed -n '/<title>/p' : |\
 	sed -e 's/<title>/\ / ' -e 's%</title>%\ % ' >/tmp/sub.$$
 	SUBJ_LISTS=$(cat /tmp/sub.$$)
@@ -113,10 +125,11 @@ function mail_subj()
 #list of summary in short
 function mail_summary()
 {
-	cd $HOME; cat web>:
-	#curl -su $femailid:$fpasswds $respaddr >:
+	curl -su $femailid:$fpasswds $respaddr >:;
 	len=$(cat : | wc -l)
-	if test $len -eq 0 ;then network_error; fi
+	if test $len -eq 0 ;then network_error ;fi
+	suc=$(cat : |  sed -n '/Unauthorized/p' | wc -l)
+	if [ "$suc" != "0" ]; then wrong_entry; fi
 	sed -n '/<summary>/p' : |\
  	sed -e 's/<summary>//g' -e 's%</summary>%%g' >/tmp/summ.$$
 	SUM_COUNT=$(cat /tmp/summ.$$ | wc -l)
@@ -136,11 +149,13 @@ function sendmail()
 	curl -su $femailid:$fpasswds $respaddr >:
 	len=$(cat : | wc -l)
 	if test $len -eq 0 ;then network_error; fi
+	suc=$(cat : |  sed -n '/Unauthorized/p' | wc -l)
+	if [ "$suc" != "0" ]; then wrong_entry; fi
 	sendinfo=$(yad --title="Desktop Gmail Grabber"\
 			 --text="Gmail access via desktop"\
 			 --form --height=200 --width=500\
 	  		--field="Enter the subject(without any white sapce)" "NoSubject"\
-			--field="Enter the Email Username"\
+			--field="Enter the Email"\
 			--field="Attachment(Optional):FL")
 	if test $? -eq 0 ; then
 		mesg=$(yad --title="Create Message to Send"\
@@ -157,11 +172,10 @@ function sendmail()
 	if [ "$mesg" == "" ]; then
 		zenity --warning --text="Content of message be non-empty"
 		exit 1; fi
-	echo "$mesg" >:
 	if [ "$fatch" == "(null)" ]; then
-		cat : | mutt -s "$fsubj" "$fmail" >/dev/null ; null=$? #note exit status failed/not
+		echo "$mesg" | mutt -s "$fsubj" "$fmail" >/dev/null ; null=$? #note exit status failed/not
 	else
-		cat : | mutt -s "$fsubj" "$fmail" -a "$fatch" >/dev/null
+		echo "$mesg" | mutt -s "$fsubj" "$fmail" -a "$fatch" >/dev/null
 		not_null=$?; fi #checking exit status if it does work(error occured redirection:failed/not)
 	if [ "$null" == "0" ] || [ "$not_null" == "0" ] ; then 
 		zenity --info --title="Desktop Gmail Grabber" --text="Mail send"
