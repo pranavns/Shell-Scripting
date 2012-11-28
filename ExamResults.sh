@@ -28,7 +28,7 @@ do
 
 	printf "%-10s %-10s %-10s\t" $name >>results
 	echo -e "<<$sgpa>>  $subj\n" >>results
-	num=`expr $num + 1`
+	num=$(expr $num + 1)
 done
 
 cat results

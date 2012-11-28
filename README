@@ -2,18 +2,18 @@
 To Run this script
 
 1. Goto Linux Terminal
-2. save the filename ( eg: as gmail.sh or something )
-3. chmod u+x filename.sh
-4. if path problem occured then
+2. execute file in bash
+    $bash filename.sh
+3. to save the filename 
+4. chmod u+x filename.sh
+5. if path problem occured then
     $cd ~
     $mkdir ~/bin
     copy the file to ~/bin
-5. execute 
+6. execute 
     $filename.sh
-6. or simply
+   or
     $./filename.sh
 
 For details and feedback
-
 blog: <http://kwind415.blogspot.com>
-mail: <pranavns415@gmail.com>
