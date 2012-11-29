@@ -4,7 +4,7 @@
 # filename		 : examResMini.sh
 # The Shell script is tabularize the University Semester Examination results
 # The main purpose is to reduce the results in a tabular form in which futhur data manipulation become simple
-# Tabular form with data fields := <registerNo> <sgpa> <grades> <candidateName>
+# Tabular form with data fields ==> <registerNo> <sgpa> <grades> <candidateName>
 # Output redirection ==> "$bash examResMini.sh > filename" 
 
 for i in {01..73}	#lower and upper bounds
