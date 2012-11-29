@@ -10,10 +10,10 @@
 for i in {01..73}	#lower and upper bounds
 do
 	url="uoc.ac.in/exam/btech/creditresnet188.php?id=2037&regno=ETAKECS0$i&Submit=Submit"
-	while (true)					#this infinte loop ensures that this pdf file is not null
+	while (true)				     #For ensuring that the file is not null
 	do
 		wget --limit-rate=200k -O student.pdf $url -o /dev/null
-		if [ -s student.pdf ]; then break; fi	#else continue the downloading process until file become nonempty
+		if [ -s student.pdf ]; then break; fi
 	done
 	pdftotext -raw student.pdf student.txt
 	name=$(sed -n '/NAME/p' student.txt | sed 's/:/ /'| awk '{print $4" "$5" "$6}')
