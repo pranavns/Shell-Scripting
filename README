@@ -1,4 +1,3 @@
-
 ---- Run the script-----
 
 1. Goto Linux Terminal
@@ -16,8 +15,5 @@
     $./filename.sh
 
 For details and feedback
-<<<<<<< HEAD
 blog: <http://kwind415.blogspot.com>
-=======
-blog: <http://kwind415.blogspot.com>
->>>>>>> 1961c91dadbe4210f7b3df2fad5dbcf3a126f2f9
+
