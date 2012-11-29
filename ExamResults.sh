@@ -24,10 +24,11 @@ do
 
 	name=$(sed -n '/NAME/p' student.txt | sed 's/:/ /'| awk '{print $4" "$5" "$6}')
 	sgpa=$(sed -n '/SGPA/p' student.txt | awk '{print $7}')
-	subj=$(sed -n '/3/p' 	student.txt | sed -e 1d   | awk '{print $(NF-1)}' | xargs echo)
+	#grad=$(sed -n '/3/p' 	student.txt | sed -e 1d   | awk '{print $(NF-1)}' | xargs echo)
+	grad=$(sed -n '/3/p' 	student.txt | sed -e '/REGISTER No/d' -e '/SGPA/d' | awk '{print $(NF-1)}' | xargs echo)
 
-	printf "%-10s %-10s %-10s\t" $name >>results
-	echo -e "<<$sgpa>>  $subj\n" >>results
+	printf "%-10s %-10s %-10s\t  "   $name >>results
+	echo   -e "<<$sgpa>>  $subj\n"	 >>results
 	num=$(expr $num + 1)
 done
 

@@ -63,7 +63,7 @@ function newmail()
 
 #checks the number of mails by greping tab summary
 function totmailno()
-{		
+{
 	COUNT_NO=$(sed -n '/<fullcount>/p' : | sed -e 's/<fullcount>/\ / '\
 	-e 's%</fullcount>%\ % ' | awk '{ print $1 }')
 	if [ "$COUNT_NO" != "0" ]; then
@@ -77,7 +77,7 @@ function totmailno()
 
 #list out all the senders
 function mail_from()
-{	
+{
 	NAME_LISTS=$(sed -n '/<name>/p' : |\
 	sed -e 's/<name>/\ / ' -e 's%</name>%\ % ' | awk '{ print $1 }')
 	NAME_COUNT=$(echo $NAME_LISTS | tr " " "\n" | wc -l)
@@ -91,7 +91,7 @@ function mail_from()
 
 #list out all the subjects
 function mail_subj()
-{	
+{
 	sed -n '/<title>/p' : |\
 	sed -e 's/<title>/\ / ' -e 's%</title>%\ % ' >/tmp/sub.$$
 	SUBJ_LISTS=$(cat /tmp/sub.$$)
@@ -166,4 +166,5 @@ main_gmail() {
 		Mail-Summary) mail_summary ;;
 	esac
 }
-main_gmail; rm -f :>/dev/null 2>&1; exit 0
+main_gmail
+rm -f :>/dev/null 2>&1; exit 0
