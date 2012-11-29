@@ -13,7 +13,7 @@ do
 	while (true)				     #For ensuring that the file is not null
 	do
 		wget --limit-rate=200k -O student.pdf $url -o /dev/null
-		if [ -s student.pdf ]; then break; fi
+		if test $(cat student.pdf | wc -l) -ge 100 ; then break; fi
 	done
 	pdftotext -raw student.pdf student.txt
 	name=$(sed -n '/NAME/p' student.txt | sed 's/:/ /'| awk '{print $4" "$5" "$6}')
