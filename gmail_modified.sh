@@ -44,7 +44,6 @@ wrong_entry() {
 		--text="Username or password is wrong!" ;exit 2
 }
 init_atom() {
-	#cd $HOME; cat web>:
 	curl -su $femailid:$fpasswds $respaddr >:
 	loginfo=`cat : | wc -l`
 	if test $loginfo -eq 0 ; then network_error; fi
