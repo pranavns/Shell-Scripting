@@ -7,8 +7,6 @@
 
 lower_limit=1
 upper_limit=73
-
-touch results;:>results
 num=$lower_limit
 
 while test $num -le $upper_limit
@@ -24,7 +22,6 @@ do
 
 	name=$(sed -n '/NAME/p' student.txt | sed 's/:/ /'| awk '{print $4" "$5" "$6}')
 	sgpa=$(sed -n '/SGPA/p' student.txt | awk '{print $7}')
-	#grad=$(sed -n '/3/p' 	student.txt | sed -e 1d   | awk '{print $(NF-1)}' | xargs echo)
 	grad=$(sed -n '/3/p' 	student.txt | sed -e '/REGISTER No/d' -e '/SGPA/d' | awk '{print $(NF-1)}' | xargs echo)
 
 	printf "%-10s %-10s %-10s\t  "   $name >>results
