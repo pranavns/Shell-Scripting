@@ -1,0 +1,12 @@
+
+Since it acts as a daemon, one can quit the terminal make your desktop unsuspicious.
+Make sure that the output file is explored after running stop.sh
+
+Usage
+-------------------------
+
+for starting the keylogger
+$bash start.sh
+
+for stopping the keylogger
+$bash stop.sh

