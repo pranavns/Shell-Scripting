@@ -1,12 +1,28 @@
 
-Since it acts as a daemon, one can quit the terminal make your desktop unsuspicious.
-Make sure that the output file is explored after running stop.sh
+Please don't misuse its possibilities. This is for study purpose only.
+I won't be responsible for the consequences when you execute this code for a bad purpose. 
 
-Usage
--------------------------
+  Dependencies: 
 
-for starting the keylogger
-$bash start.sh
+      gcc compiler, xinput
 
-for stopping the keylogger
-$bash stop.sh
+  Usage:
+
+   To start the Keylogger
+
+      $bash start.sh
+
+   To stop  the keylogger
+
+      $bash stop.sh
+
+   To explore the result
+
+      $cat keyStrokes.txt
+
+
+Caution: DO NOT open 'keyStrokes.txt' unless 'stop.sh' is executed as the file is being written.
+
+A daemon process is generated right after executing 'start.sh'. So one can even quit the terminal.
+
+Happy BASHing...
