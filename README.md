@@ -1,6 +1,6 @@
 
 													      
-This repository contains independant shell scripts for autmomating tasks that take significant time          
+This repository contains independent shell scripts for autmomating tasks that take significant time          
 when carried out manually. This would be useful when you want to make a result in a short span of time.     
 													      
 Some of these scripts may have dependencies which can even be a third-party application in Ubuntu SC.        
