@@ -1,7 +1,8 @@
 #!/bin/sh
 
-#Script to stop myKeylogger process using catchable interruption
+#Script to stop myKeylogger process using catchable interruption 'SIGINT'
+#Displays the content of keyStrokes.txt
 
 ps aux | grep "myKeylogger" | awk '{ print $2}' | xargs kill -SIGINT
 
-cat output_file.txt 
+cat keyStrokes.txt 
