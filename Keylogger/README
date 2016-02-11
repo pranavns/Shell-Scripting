@@ -1,6 +1,6 @@
 
 Please don't misuse its possibilities. This is for study purpose only.
-I won't be responsible for the consequences when you execute this code for a bad purpose. 
+I won't be responsible for the consequences when you execute this code with a malicious intent. 
 
   Dependencies: 
 
@@ -21,8 +21,9 @@ I won't be responsible for the consequences when you execute this code for a bad
       $cat keyStrokes.txt
 
 
-Caution: DO NOT open 'keyStrokes.txt' unless 'stop.sh' is executed as the file is being written.
+Caution: DO NOT open 'keyStrokes.txt' unless 'stop.sh' is executed, since the file is being written.
 
-A daemon process is generated right after executing 'start.sh'. So one can even quit the terminal.
+A daemon process is generated right after executing 'start.sh'. So one can even quit the terminal. 
+The daemon process gets terminated only when executing 'stop.sh' or generating the signal 'SIGINT' manually.
 
 Happy BASHing...
